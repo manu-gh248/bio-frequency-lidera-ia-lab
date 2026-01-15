@@ -49,7 +49,7 @@
 
         /* Estilo específico para la barra móvil */
         .glass-sticky-bar {
-            background: rgba(15, 23, 42, 0.85); /* Más opaco para legibilidad */
+            background: rgba(15, 23, 42, 0.95); /* Muy opaco para evitar solapamiento visual */
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -127,10 +127,10 @@
             max-height: 0; opacity: 0; overflow: hidden;
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .info-panel.visible { max-height: 600px; opacity: 1; margin-top: 1rem; }
+        .info-panel.visible { max-height: 800px; opacity: 1; margin-top: 1rem; }
 
         .custom-scroll {
-            max-height: 250px;
+            max-height: 300px;
             overflow-y: auto;
             padding-right: 12px;
         }
@@ -142,9 +142,12 @@
         .fade-in { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
         @keyframes fadeIn { to { opacity: 1; } }
 
-        .prose-custom strong { color: #38bdf8; font-weight: 700; }
-        .prose-custom ul { list-style-type: disc; padding-left: 1.2rem; margin-top: 0.5rem; margin-bottom: 0.5rem; }
-        .prose-custom li { margin-bottom: 0.3rem; color: #cbd5e1; }
+        /* Typography improvements for explanations */
+        .prose-custom strong { color: #38bdf8; font-weight: 700; letter-spacing: 0.02em; }
+        .prose-custom ul { list-style-type: disc; padding-left: 1.2rem; margin-top: 0.8rem; margin-bottom: 0.8rem; }
+        .prose-custom li { margin-bottom: 0.5rem; color: #cbd5e1; }
+        .prose-custom h4 { color: #fff; font-weight: bold; margin-top: 1rem; margin-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.2rem; display: inline-block; }
+        .warning-text { color: #fb7185; font-style: italic; border-left: 2px solid #fb7185; padding-left: 0.8rem; margin-top: 1rem; display: block; }
     </style>
 </head>
 <body class="min-h-screen text-slate-300 selection:bg-sky-500/30">
@@ -155,8 +158,7 @@
 
     <main class="relative z-10 max-w-7xl mx-auto p-4 lg:p-8 min-h-screen flex flex-col lg:flex-row gap-6 lg:gap-12 items-start justify-center pt-8 lg:pt-12">
         
-        <!-- --- MOBILE STICKY BAR (Nuevo: Solo visible en móvil) --- -->
-        <!-- Ocupa poco espacio, contiene: Play, Timer, Info Toggle -->
+        <!-- --- MOBILE STICKY BAR (Solo visible en móvil) --- -->
         <div class="lg:hidden fixed top-0 left-0 w-full z-50 glass-sticky-bar px-4 py-3 flex justify-between items-center">
             
             <!-- Mobile Play Button -->
@@ -166,7 +168,7 @@
             </button>
 
             <!-- Mobile Timer & Controls -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-4">
                 <!-- Timer Select -->
                 <div class="relative flex items-center">
                     <svg class="w-3 h-3 text-slate-400 absolute left-2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -181,16 +183,18 @@
                     </select>
                 </div>
 
-                <!-- Info Switch (Mini) -->
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" id="mobileInfoToggle" class="sr-only peer">
-                    <div class="w-8 h-4 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-sky-600 peer-checked:after:bg-white"></div>
-                </label>
+                <!-- Info Switch con Etiqueta añadida -->
+                <div class="flex items-center gap-2">
+                    <span class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Explicación</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="mobileInfoToggle" class="sr-only peer">
+                        <div class="w-8 h-4 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-sky-600 peer-checked:after:bg-white"></div>
+                    </label>
+                </div>
             </div>
         </div>
 
-        <!-- LEFT: Controls & Visualizer (Desktop Sticky, Mobile Scroll) -->
-        <!-- Added pt-16 to mobile view to account for the fixed header covering content -->
+        <!-- LEFT: Controls & Visualizer -->
         <section class="w-full lg:w-1/3 flex flex-col gap-6 fade-in lg:sticky lg:top-8 mt-16 lg:mt-0" style="animation-delay: 0.1s;">
             
             <!-- Header (Logo + Texto) -->
@@ -211,7 +215,7 @@
 
             <!-- Master Control Card -->
             <div class="glass-panel rounded-2xl p-6 flex flex-col gap-6">
-                <!-- Desktop Play Button (Hidden on mobile as it's in the sticky bar) -->
+                <!-- Desktop Play Button -->
                 <button id="desktopPlayBtn" class="hidden lg:flex group relative w-full h-16 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 transition-all overflow-hidden items-center justify-center gap-3 shadow-lg">
                     <div class="absolute inset-0 bg-emerald-500/20 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
                     <span id="btnIcon" class="relative z-10 flex items-center justify-center w-8 h-8 rounded-full border border-white/30 group-hover:border-emerald-400/80 transition-colors">
@@ -232,7 +236,7 @@
                     </div>
 
                     <!-- Desktop Timer Selection -->
-                    <div class="space-y-3 hidden lg:block"> <!-- Only show here on desktop -->
+                    <div class="space-y-3 hidden lg:block">
                         <div class="flex justify-between items-center text-[10px] uppercase tracking-wider text-slate-400 font-bold">
                             <span>Temporizador (Auto-Stop)</span>
                             <div class="relative">
@@ -247,7 +251,7 @@
                                 </select>
                             </div>
                         </div>
-                        <!-- Countdown Display (Solo visible cuando activo) -->
+                        <!-- Countdown Display -->
                         <div id="countdownDisplayWrapper" class="hidden text-center bg-slate-900/50 rounded py-2 border border-slate-700 border-dashed">
                              <span id="countdownDisplay" class="font-mono text-xl text-emerald-400 tracking-widest">00:00</span>
                              <span class="text-[9px] text-slate-500 block uppercase">Tiempo Restante</span>
@@ -292,7 +296,7 @@
         <!-- RIGHT: Modes Grid -->
         <section class="w-full lg:w-2/3 fade-in pb-12" style="animation-delay: 0.2s;">
             
-            <!-- Controls Header (Solo desktop para el toggle, en móvil está arriba) -->
+            <!-- Controls Header -->
             <div class="flex justify-between items-center mb-6 px-1 border-b border-white/10 pb-4">
                 <h2 class="text-sm font-bold uppercase tracking-widest text-slate-300">Protocolos de Frecuencia</h2>
                 
@@ -387,12 +391,113 @@
 
     <script>
         // --- DATA ---
+        // Explicaciones técnicas y detalladas según requerimiento de ingeniería
         const presets = {
-            'B': { beat: 2.5, min: 0.5, max: 4, name: 'DELTA', img: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?auto=format&fit=crop&w=1920&q=80', explanation: `<strong>ESTADO DEL SISTEMA: REBOOT / HIBERNACIÓN</strong><br><br>Las ondas Delta son la frecuencia más baja y penetrante. Ocurren exclusivamente durante el sueño profundo sin sueños (fase NREM).<br><br><strong>Aplicaciones Prácticas:</strong><ul><li><strong>Curación Física:</strong> Es el único momento en que el cerebro libera cantidades masivas de Hormona del Crecimiento.</li><li><strong>Reset Inmunológico:</strong> Ideal si sientes que estás enfermando.</li><li><strong>Insomnio Severo:</strong> Induce el sueño.</li></ul><em>Advertencia: No usar si necesitas conducir.</em>` },
-            'E': { beat: 6, min: 4, max: 8, name: 'THETA', img: 'https://images.unsplash.com/photo-1499346030926-9a72daac6c63?auto=format&fit=crop&w=1920&q=80', explanation: `<strong>ESTADO DEL SISTEMA: ACCESO A ROOT / DEBUGGING</strong><br><br>Theta es la frontera entre el consciente y el subconsciente. Estado "crepuscular" o hipnagógico.<br><br><strong>Aplicaciones Prácticas:</strong><ul><li><strong>Creatividad "Out of the box":</strong> Ideas sin censura lógica.</li><li><strong>Resolución de Problemas:</strong> Acceso a memorias profundas.</li><li><strong>Aprendizaje Profundo:</strong> Alta sugestibilidad (idiomas).</li></ul>` },
-            'D': { beat: 10, min: 8, max: 14, name: 'ALPHA', img: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&w=1920&q=80', explanation: `<strong>ESTADO DEL SISTEMA: IDLE / READY MODE</strong><br><br>Alpha es el estado "por defecto" de un cerebro sano y relajado. Marcha en vacío.<br><br><strong>Aplicaciones Prácticas:</strong><ul><li><strong>Estudio y Lectura:</strong> Absorber información sin fatiga.</li><li><strong>Reducción de Estrés:</strong> Reset de cortisol.</li><li><strong>"Flow":</strong> Frecuencia de deportistas.</li></ul>` },
-            'A': { beat: 20, min: 14, max: 30, name: 'BETA', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80', explanation: `<strong>ESTADO DEL SISTEMA: PROCESAMIENTO ACTIVO</strong><br><br>Beta es la frecuencia de la vigilia normal y lógica.<br><br><strong>Aplicaciones Prácticas:</strong><ul><li><strong>Trabajo Focalizado:</strong> Informes, programación.</li><li><strong>Debate y Oratoria:</strong> Procesamiento rápido.</li><li><strong>Café Digital:</strong> Energía mental.</li></ul>` },
-            'C': { beat: 40, min: 30, max: 100, name: 'GAMMA', img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1920&q=80', explanation: `<strong>ESTADO DEL SISTEMA: OVERCLOCKING / TURBO</strong><br><br>Gamma son ráfagas de alta energía para procesamiento masivo.<br><br><strong>Aplicaciones Prácticas:</strong><ul><li><strong>Momentos "Eureka":</strong> Soluciones geniales.</li><li><strong>Memoria Fotográfica:</strong> Retención de datos complejos.</li><li><strong>Meditación Avanzada:</strong> Picos de lucidez.</li></ul>` }
+            'B': { 
+                beat: 2.5, 
+                min: 0.5, 
+                max: 4, 
+                name: 'DELTA', 
+                img: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?auto=format&fit=crop&w=1920&q=80', // Stars 
+                explanation: `
+                    <h4>ESTADO DEL SISTEMA: HIBERNACIÓN / REPARACIÓN PROFUNDA</h4>
+                    <p>Las ondas Delta (0.5 - 4 Hz) representan la frecuencia más baja del espectro. Corresponden al estado de sueño profundo sin sueños (fase NREM). En este estado, la consciencia externa se apaga para dedicar todos los recursos energéticos al mantenimiento del hardware biológico.</p>
+                    
+                    <h4>APLICACIONES PRÁCTICAS (CASOS DE USO)</h4>
+                    <ul>
+                        <li><strong>Regeneración Física Crítica:</strong> Es la única fase donde se libera la Hormona del Crecimiento (HGH) en picos masivos, esencial para reparar micro-roturas musculares (post-gimnasio) y tejido óseo.</li>
+                        <li><strong>"Lavado" Cerebral (Sistema Glinfático):</strong> Durante Delta, el cerebro elimina las toxinas beta-amiloides acumuladas durante el día.</li>
+                        <li><strong>Reset Inmunológico:</strong> Úsalo si detectas síntomas tempranos de enfermedad o agotamiento extremo.</li>
+                        <li><strong>Insomnio Severo:</strong> Diseñado para arrastrar al cerebro desde estados de alta frecuencia directamente al sueño.</li>
+                    </ul>
+
+                    <span class="warning-text">⚠️ PROTOCOLO DE SEGURIDAD: Riesgo de somnolencia extrema instantánea. PROHIBIDO su uso al conducir, operar maquinaria o realizar tareas que requieran atención. Úsese preferiblemente en posición horizontal y con los ojos cerrados.</span>
+                ` 
+            },
+            'E': { 
+                beat: 6, 
+                min: 4, 
+                max: 8, 
+                name: 'THETA', 
+                img: 'https://images.unsplash.com/photo-1499346030926-9a72daac6c63?auto=format&fit=crop&w=1920&q=80', // Fog
+                explanation: `
+                    <h4>ESTADO DEL SISTEMA: ACCESO A ROOT / DEPURACIÓN</h4>
+                    <p>Theta (4 - 8 Hz) es el estado liminal o "crepuscular". Es la frontera difusa entre el consciente y el subconsciente. Es el modo operativo durante la hipnosis, la meditación profunda y el sueño REM (donde ocurren los sueños).</p>
+
+                    <h4>APLICACIONES PRÁCTICAS (CASOS DE USO)</h4>
+                    <ul>
+                        <li><strong>Ingeniería Creativa:</strong> En Theta, el filtro lógico del lóbulo frontal se relaja, permitiendo conectar ideas distantes sin censura ("pensamiento lateral"). Ideal para brainstorming artístico.</li>
+                        <li><strong>Reprogramación Mental:</strong> El cerebro es altamente plástico y sugestionable. Úsalo para escuchar afirmaciones o aprender idiomas por inmersión.</li>
+                        <li><strong>Recuperación de Archivos:</strong> Facilita el acceso a memorias de largo plazo o reprimidas que no son accesibles en estado Beta.</li>
+                        <li><strong>Meditación Profunda:</strong> Simula años de práctica meditativa en minutos.</li>
+                    </ul>
+
+                    <span class="warning-text">⚠️ PROTOCOLO DE SEGURIDAD: Puede provocar estados de ensoñación vívida o desorientación temporal. No recomendado para tareas lógicas o matemáticas. Mantén una libreta cerca; las ideas en Theta son brillantes pero volátiles (se olvidan al volver a Beta).</span>
+                ` 
+            },
+            'D': { 
+                beat: 10, 
+                min: 8, 
+                max: 14, 
+                name: 'ALPHA', 
+                img: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&w=1920&q=80', // Deep Forest
+                explanation: `
+                    <h4>ESTADO DEL SISTEMA: IDLE / READY MODE</h4>
+                    <p>Alpha (8 - 14 Hz) es el "punto dulce" de la mente. Es el estado de reposo activo: despierto, alerta, pero física y mentalmente relajado. Es la frecuencia puente que permite transitar entre la acción externa y la calma interna.</p>
+
+                    <h4>APLICACIONES PRÁCTICAS (CASOS DE USO)</h4>
+                    <ul>
+                        <li><strong>Super-Aprendizaje:</strong> Se ha demostrado que la retención de lectura y datos aumenta drásticamente en Alpha bajo (8-10Hz).</li>
+                        <li><strong>Estado de "Flow":</strong> La zona donde los deportistas de élite o programadores rinden al máximo sin sensación de esfuerzo.</li>
+                        <li><strong>Gestión de Estrés:</strong> Una sesión de 15 minutos reduce los niveles de cortisol y estabiliza el ritmo cardíaco.</li>
+                        <li><strong>Visualización y Enfoque:</strong> Perfecto para planificar el día con claridad antes de empezar a trabajar.</li>
+                    </ul>
+
+                    <span class="warning-text">⚠️ PROTOCOLO DE SEGURIDAD: Es el rango más seguro y versátil. Sin contraindicaciones mayores, aunque un exceso de Alpha puede llevar a la procrastinación ("demasiado relajado para trabajar"). Ideal para usar de fondo mientras lees.</span>
+                ` 
+            },
+            'A': { 
+                beat: 20, 
+                min: 14, 
+                max: 30, 
+                name: 'BETA', 
+                img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80', // Structure
+                explanation: `
+                    <h4>ESTADO DEL SISTEMA: PROCESAMIENTO ACTIVO / ALTO RENDIMIENTO</h4>
+                    <p>Beta (14 - 30 Hz) es la frecuencia dominante durante la vigilia. Es el modo de "lucha o huida" controlado. El cerebro está totalmente volcado hacia el exterior, analizando datos sensoriales, calculando riesgos y ejecutando decisiones lógicas.</p>
+
+                    <h4>APLICACIONES PRÁCTICAS (CASOS DE USO)</h4>
+                    <ul>
+                        <li><strong>Carga de Trabajo Pesada:</strong> Análisis de datos, programación compleja, contabilidad o redacción técnica.</li>
+                        <li><strong>Atención Focalizada (Láser):</strong> Elimina la niebla mental matutina mejor que la cafeína.</li>
+                        <li><strong>Debate y Oratoria:</strong> Acelera el procesamiento lingüístico y la agilidad mental para responder rápido.</li>
+                        <li><strong>Pensamiento Crítico:</strong> Resolución de problemas matemáticos o lógicos.</li>
+                    </ul>
+
+                    <span class="warning-text">⚠️ PROTOCOLO DE SEGURIDAD: Riesgo de ansiedad. Mantener frecuencias Beta altas (>20Hz) durante más de 45-60 minutos puede desencadenar estrés, nerviosismo o paranoia. Úsalo en "sprints" de trabajo y descansa en Alpha. No usar si ya sufres de ansiedad.</span>
+                ` 
+            },
+            'C': { 
+                beat: 40, 
+                min: 30, 
+                max: 100, 
+                name: 'GAMMA', 
+                img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1920&q=80', // Chip/Tech
+                explanation: `
+                    <h4>ESTADO DEL SISTEMA: OVERCLOCKING / INTEGRACIÓN TOTAL</h4>
+                    <p>Gamma (>30 Hz) no es un estado base, sino ráfagas de altísima energía. Es la frecuencia que sincroniza (binds) información de diferentes áreas del cerebro en un solo concepto coherente. Es el sonido de la "genialidad".</p>
+
+                    <h4>APLICACIONES PRÁCTICAS (CASOS DE USO)</h4>
+                    <ul>
+                        <li><strong>Momentos "Eureka":</strong> Cuando una solución compleja aparece de golpe en tu mente. Gamma facilita estos saltos lógicos.</li>
+                        <li><strong>Procesamiento de Información Masiva:</strong> Para estudiar temas de extrema complejidad en poco tiempo.</li>
+                        <li><strong>Memoria Fotográfica:</strong> Incrementa la tasa de refresco perceptual y la retención de detalles.</li>
+                        <li><strong>Meditación Avanzada:</strong> Monjes tibetanos expertos muestran picos Gamma sostenidos asociados a la compasión universal.</li>
+                    </ul>
+
+                    <span class="warning-text">⚠️ PROTOCOLO DE SEGURIDAD: Alto coste energético. El cerebro consume mucha glucosa en Gamma. El uso prolongado (>20 min) puede causar dolor de cabeza por agotamiento mental. Úsalo solo para romper bloqueos creativos muy duros y luego hidrátate y descansa.</span>
+                ` 
+            }
         };
 
         // --- AUDIO ENGINE ---
