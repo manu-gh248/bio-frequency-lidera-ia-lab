@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-    <title>Biofrequency – Binaural Engine</title>
-
-    <link rel="icon" type="image/png" href="https://i.ibb.co/dw6Mb8HQ/logo-liderapia-2024-Captura-de-pantalla-2024-09-23-a-las-15-22-03.jpg">
+    <title>Binaural Engine</title>
+    <!-- Favicon añadido: Logo LIDERAPIA -->
+    <link rel="icon" href="https://i.ibb.co/dw6Mb8HQ/logo-liderapia-2024-Captura-de-pantalla-2024-09-23-a-las-15-22-03.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -46,6 +45,14 @@
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Estilo específico para la barra móvil */
+        .glass-sticky-bar {
+            background: rgba(15, 23, 42, 0.85); /* Más opaco para legibilidad */
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
         .glass-card {
@@ -97,6 +104,24 @@
         .toggle-checkbox:checked { right: 0; border-color: #38bdf8; }
         .toggle-checkbox:checked + .toggle-label { background-color: rgba(56, 189, 248, 0.5); }
         
+        /* Select styling */
+        select {
+            background-color: transparent;
+            color: #38bdf8;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.375rem;
+            padding: 0.25rem 0.5rem;
+            outline: none;
+            cursor: pointer;
+            text-align: right;
+            appearance: none; /* Hide default arrow to use custom or none */
+            -webkit-appearance: none;
+        }
+        select option {
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
         /* --- Animation & Scroll --- */
         .info-panel {
             max-height: 0; opacity: 0; overflow: hidden;
@@ -130,12 +155,45 @@
 
     <main class="relative z-10 max-w-7xl mx-auto p-4 lg:p-8 min-h-screen flex flex-col lg:flex-row gap-6 lg:gap-12 items-start justify-center pt-8 lg:pt-12">
         
-        <!-- LEFT: Controls & Visualizer -->
-        <!-- CAMBIO: 'sticky top-8' cambiado a 'lg:sticky lg:top-8'. 
-             Así en móvil es estático (hace scroll normal) y no se monta encima de nada. -->
-        <section class="w-full lg:w-1/3 flex flex-col gap-6 fade-in lg:sticky lg:top-8" style="animation-delay: 0.1s;">
+        <!-- --- MOBILE STICKY BAR (Nuevo: Solo visible en móvil) --- -->
+        <!-- Ocupa poco espacio, contiene: Play, Timer, Info Toggle -->
+        <div class="lg:hidden fixed top-0 left-0 w-full z-50 glass-sticky-bar px-4 py-3 flex justify-between items-center">
             
-            <!-- Header (MODIFICADO: Logo + Texto Integrados) -->
+            <!-- Mobile Play Button -->
+            <button id="mobilePlayBtn" class="flex items-center gap-2 bg-emerald-500/20 border border-emerald-500/50 rounded-full px-4 py-1.5 transition-colors">
+                <svg id="mobilePlayIcon" class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <span id="mobilePlayText" class="text-xs font-bold text-emerald-100 uppercase tracking-wider">Play</span>
+            </button>
+
+            <!-- Mobile Timer & Controls -->
+            <div class="flex items-center gap-3">
+                <!-- Timer Select -->
+                <div class="relative flex items-center">
+                    <svg class="w-3 h-3 text-slate-400 absolute left-2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <select id="mobileTimerSelect" class="pl-7 pr-2 py-1 text-xs bg-slate-800/50 border border-slate-600 rounded text-sky-300 font-mono">
+                        <option value="infinity">Sin Fin</option>
+                        <option value="5">5 min</option>
+                        <option value="10">10 min</option>
+                        <option value="15">15 min</option>
+                        <option value="20">20 min</option>
+                        <option value="25">25 min</option>
+                        <option value="30">30 min</option>
+                    </select>
+                </div>
+
+                <!-- Info Switch (Mini) -->
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="mobileInfoToggle" class="sr-only peer">
+                    <div class="w-8 h-4 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-sky-600 peer-checked:after:bg-white"></div>
+                </label>
+            </div>
+        </div>
+
+        <!-- LEFT: Controls & Visualizer (Desktop Sticky, Mobile Scroll) -->
+        <!-- Added pt-16 to mobile view to account for the fixed header covering content -->
+        <section class="w-full lg:w-1/3 flex flex-col gap-6 fade-in lg:sticky lg:top-8 mt-16 lg:mt-0" style="animation-delay: 0.1s;">
+            
+            <!-- Header (Logo + Texto) -->
             <div class="mb-4 flex items-center gap-4 w-full border-b border-white/5 pb-6">
                 <!-- LOGO -->
                 <img src="https://i.ibb.co/dw6Mb8HQ/logo-liderapia-2024-Captura-de-pantalla-2024-09-23-a-las-15-22-03.jpg" 
@@ -144,8 +202,6 @@
                 
                 <div class="flex flex-col justify-center">
                     <h1 class="text-3xl font-light tracking-tight text-white leading-none">LIDERA IA <span class="font-bold text-sky-400">lab</span></h1>
-                    
-                    <!-- Subtítulo en dos líneas con tracking unificado (0.25em) -->
                     <div class="flex flex-col mt-1.5">
                         <span class="text-[10px] uppercase tracking-[0.25em] text-slate-400 font-bold leading-none">Bio-Frequency</span>
                         <span class="text-[10px] uppercase tracking-[0.25em] text-slate-400 font-bold leading-none mt-1">Engineer</span>
@@ -154,9 +210,9 @@
             </div>
 
             <!-- Master Control Card -->
-            <div class="glass-panel rounded-2xl p-6 flex flex-col gap-8">
-                <!-- Play Button -->
-                <button id="playBtn" class="group relative w-full h-16 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 transition-all overflow-hidden flex items-center justify-center gap-3 shadow-lg">
+            <div class="glass-panel rounded-2xl p-6 flex flex-col gap-6">
+                <!-- Desktop Play Button (Hidden on mobile as it's in the sticky bar) -->
+                <button id="desktopPlayBtn" class="hidden lg:flex group relative w-full h-16 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 transition-all overflow-hidden items-center justify-center gap-3 shadow-lg">
                     <div class="absolute inset-0 bg-emerald-500/20 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
                     <span id="btnIcon" class="relative z-10 flex items-center justify-center w-8 h-8 rounded-full border border-white/30 group-hover:border-emerald-400/80 transition-colors">
                         <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
@@ -164,7 +220,7 @@
                     <span id="btnText" class="relative z-10 text-sm font-bold tracking-widest text-white">INICIAR SESIÓN</span>
                 </button>
 
-                <!-- Sliders -->
+                <!-- Sliders & Timer Control (Desktop) -->
                 <div class="space-y-6">
                     <!-- Volume -->
                     <div class="space-y-3">
@@ -173,6 +229,29 @@
                             <span id="volDisplay" class="text-sky-300">30%</span>
                         </div>
                         <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.3">
+                    </div>
+
+                    <!-- Desktop Timer Selection -->
+                    <div class="space-y-3 hidden lg:block"> <!-- Only show here on desktop -->
+                        <div class="flex justify-between items-center text-[10px] uppercase tracking-wider text-slate-400 font-bold">
+                            <span>Temporizador (Auto-Stop)</span>
+                            <div class="relative">
+                                <select id="desktopTimerSelect" class="bg-slate-800/50 border border-slate-600 rounded text-sky-400 font-mono text-xs py-1 px-2">
+                                    <option value="infinity">Sin Fin (∞)</option>
+                                    <option value="5">5 min</option>
+                                    <option value="10">10 min</option>
+                                    <option value="15">15 min</option>
+                                    <option value="20">20 min</option>
+                                    <option value="25">25 min</option>
+                                    <option value="30">30 min</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Countdown Display (Solo visible cuando activo) -->
+                        <div id="countdownDisplayWrapper" class="hidden text-center bg-slate-900/50 rounded py-2 border border-slate-700 border-dashed">
+                             <span id="countdownDisplay" class="font-mono text-xl text-emerald-400 tracking-widest">00:00</span>
+                             <span class="text-[9px] text-slate-500 block uppercase">Tiempo Restante</span>
+                        </div>
                     </div>
 
                     <!-- Fine Tune Beat -->
@@ -193,7 +272,6 @@
             <!-- Visualizer -->
             <div class="glass-panel rounded-2xl h-40 relative overflow-hidden flex flex-col justify-end shadow-xl">
                 <canvas id="oscilloscope" class="absolute inset-0 z-0 opacity-50"></canvas>
-                <!-- Minimal Stats Overlay -->
                 <div class="relative z-10 p-5 flex justify-between items-end text-[10px] font-mono leading-none bg-gradient-to-t from-slate-900/90 to-transparent">
                     <div class="text-slate-400">
                         <div class="mb-1 flex gap-2">L: <span id="freqL" class="text-sky-300 font-bold">---</span></div>
@@ -206,31 +284,29 @@
                 </div>
             </div>
             
-            <!-- Footer (MODIFICADO: Solo texto) -->
             <div class="flex items-center justify-center opacity-70 hover:opacity-100 transition-opacity">
                 <p class="text-[9px] text-slate-500 uppercase tracking-widest border border-slate-800 inline-block px-3 py-1 rounded-full">🎧 Auriculares Requeridos</p>
             </div>
-
         </section>
 
         <!-- RIGHT: Modes Grid -->
         <section class="w-full lg:w-2/3 fade-in pb-12" style="animation-delay: 0.2s;">
             
-            <!-- Controls Header -->
+            <!-- Controls Header (Solo desktop para el toggle, en móvil está arriba) -->
             <div class="flex justify-between items-center mb-6 px-1 border-b border-white/10 pb-4">
                 <h2 class="text-sm font-bold uppercase tracking-widest text-slate-300">Protocolos de Frecuencia</h2>
                 
-                <!-- Info Toggle (MODIFICADO) -->
-                <div class="flex items-center gap-3">
+                <!-- Desktop Info Toggle -->
+                <div class="hidden lg:flex items-center gap-3">
                     <span class="text-[10px] uppercase tracking-wider text-sky-400 font-bold">Mostrar Explicación</span>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="infoToggle" class="sr-only peer">
+                        <input type="checkbox" id="desktopInfoToggle" class="sr-only peer">
                         <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-sky-600 peer-checked:after:bg-white"></div>
                     </label>
                 </div>
             </div>
 
-            <!-- Technical Info Panel (Expandable) -->
+            <!-- Technical Info Panel -->
             <div id="explanationPanel" class="info-panel glass-panel rounded-xl p-0 border-l-4 border-l-sky-500 mb-6 shadow-2xl relative overflow-hidden">
                 <div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
                     <svg class="w-32 h-32 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
@@ -246,6 +322,7 @@
                 </div>
             </div>
 
+            <!-- Presets Grid -->
             <div class="grid grid-cols-1 gap-4">
                 
                 <!-- Delta (B) -->
@@ -309,83 +386,13 @@
     </main>
 
     <script>
-        // --- DATA (Revised High-Availability Image IDs) ---
+        // --- DATA ---
         const presets = {
-            'B': { 
-                beat: 2.5, min: 0.5, max: 4, name: 'DELTA', 
-                img: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?auto=format&fit=crop&w=1920&q=80', // Stars
-                explanation: `
-                    <strong>ESTADO DEL SISTEMA: REBOOT / HIBERNACIÓN</strong><br><br>
-                    Las ondas Delta son la frecuencia más baja y penetrante. Ocurren exclusivamente durante el sueño profundo sin sueños (fase NREM).<br><br>
-                    <strong>Aplicaciones Prácticas:</strong>
-                    <ul>
-                        <li><strong>Curación Física:</strong> Es el único momento en que el cerebro libera cantidades masivas de Hormona del Crecimiento para reparar músculos y tejidos.</li>
-                        <li><strong>Reset Inmunológico:</strong> Ideal si sientes que estás enfermando.</li>
-                        <li><strong>Insomnio Severo:</strong> Úsala para inducir el sueño cuando tu mente no para de dar vueltas.</li>
-                    </ul>
-                    <em>Advertencia: No usar si necesitas realizar tareas físicas o conducir. Induce somnolencia extrema.</em>
-                `
-            },
-            'E': { 
-                beat: 6, min: 4, max: 8, name: 'THETA', 
-                img: 'https://images.unsplash.com/photo-1499346030926-9a72daac6c63?auto=format&fit=crop&w=1920&q=80', // Fog
-                explanation: `
-                    <strong>ESTADO DEL SISTEMA: ACCESO A ROOT / DEBUGGING</strong><br><br>
-                    Theta es la frontera entre el consciente y el subconsciente. Es el estado "crepuscular" que experimentas justo antes de dormirte o al despertarte.<br><br>
-                    <strong>Aplicaciones Prácticas:</strong>
-                    <ul>
-                        <li><strong>Creatividad "Out of the box":</strong> Las mejores ideas surgen aquí porque la censura lógica está desactivada.</li>
-                        <li><strong>Resolución de Problemas Emocionales:</strong> Acceso a memorias profundas.</li>
-                        <li><strong>Aprendizaje Profundo:</strong> El cerebro es altamente sugestionable y plástico en este estado (ideal para aprender idiomas).</li>
-                    </ul>
-                    <em>Tip: Ten una libreta cerca. Las ideas en Theta son brillantes pero volátiles y se olvidan rápido.</em>
-                `
-            },
-            'D': { 
-                beat: 10, min: 8, max: 14, name: 'ALPHA', 
-                img: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&w=1920&q=80', // Deep Forest
-                explanation: `
-                    <strong>ESTADO DEL SISTEMA: IDLE / READY MODE</strong><br><br>
-                    Alpha es el estado "por defecto" de un cerebro sano y relajado. Es la "marcha en vacío": el motor está encendido, caliente y listo, pero no está acelerado.<br><br>
-                    <strong>Aplicaciones Prácticas:</strong>
-                    <ul>
-                        <li><strong>Estudio y Lectura:</strong> Capacidad de absorber información sin fatiga mental.</li>
-                        <li><strong>Reducción de Estrés:</strong> 10 minutos en Alpha pueden resetear niveles altos de cortisol.</li>
-                        <li><strong>"Flow":</strong> Es la frecuencia de los deportistas justo antes de la acción.</li>
-                        <li><strong>Visualización Positiva:</strong> Prepara tu mente para el éxito antes de una reunión importante.</li>
-                    </ul>
-                `
-            },
-            'A': { 
-                beat: 20, min: 14, max: 30, name: 'BETA', 
-                img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80', // Structure
-                explanation: `
-                    <strong>ESTADO DEL SISTEMA: PROCESAMIENTO ACTIVO / CARGA DE TRABAJO</strong><br><br>
-                    Beta es la frecuencia de la vigilia normal. Tu cerebro está escaneando el entorno, analizando datos y tomando decisiones lógicas.<br><br>
-                    <strong>Aplicaciones Prácticas:</strong>
-                    <ul>
-                        <li><strong>Trabajo Focalizado:</strong> Redactar informes, programar, contabilidad.</li>
-                        <li><strong>Debate y Oratoria:</strong> Requiere procesamiento rápido del lenguaje y lógica.</li>
-                        <li><strong>Café Digital:</strong> Sustituye la cafeína. Úsalo si te sientes "lento" por la mañana.</li>
-                    </ul>
-                    <em>Cuidado: Mantener Beta alta (High Beta) por demasiado tiempo causa ansiedad y estrés. Úsalo por bloques de tiempo.</em>
-                `
-            },
-            'C': { 
-                beat: 40, min: 30, max: 100, name: 'GAMMA', 
-                img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1920&q=80', // Chip/Tech
-                explanation: `
-                    <strong>ESTADO DEL SISTEMA: OVERCLOCKING / TURBO BOOST</strong><br><br>
-                    Gamma son las ondas más rápidas. No es un estado constante, sino ráfagas de altísima energía asociadas al procesamiento masivo de información.<br><br>
-                    <strong>Aplicaciones Prácticas:</strong>
-                    <ul>
-                        <li><strong>Momentos "Eureka":</strong> Cuando piezas de información dispares se unen de repente en una solución genial.</li>
-                        <li><strong>Memoria Fotográfica:</strong> Alta tasa de retención de datos complejos.</li>
-                        <li><strong>Meditación Avanzada:</strong> Los monjes tibetanos expertos muestran picos masivos de Gamma.</li>
-                    </ul>
-                    <em>Requiere mucha energía (glucosa). Es agotador mantenerlo por mucho tiempo. Úsalo para romper bloqueos creativos difíciles.</em>
-                `
-            }
+            'B': { beat: 2.5, min: 0.5, max: 4, name: 'DELTA', img: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?auto=format&fit=crop&w=1920&q=80', explanation: `<strong>ESTADO DEL SISTEMA: REBOOT / HIBERNACIÓN</strong><br><br>Las ondas Delta son la frecuencia más baja y penetrante. Ocurren exclusivamente durante el sueño profundo sin sueños (fase NREM).<br><br><strong>Aplicaciones Prácticas:</strong><ul><li><strong>Curación Física:</strong> Es el único momento en que el cerebro libera cantidades masivas de Hormona del Crecimiento.</li><li><strong>Reset Inmunológico:</strong> Ideal si sientes que estás enfermando.</li><li><strong>Insomnio Severo:</strong> Induce el sueño.</li></ul><em>Advertencia: No usar si necesitas conducir.</em>` },
+            'E': { beat: 6, min: 4, max: 8, name: 'THETA', img: 'https://images.unsplash.com/photo-1499346030926-9a72daac6c63?auto=format&fit=crop&w=1920&q=80', explanation: `<strong>ESTADO DEL SISTEMA: ACCESO A ROOT / DEBUGGING</strong><br><br>Theta es la frontera entre el consciente y el subconsciente. Estado "crepuscular" o hipnagógico.<br><br><strong>Aplicaciones Prácticas:</strong><ul><li><strong>Creatividad "Out of the box":</strong> Ideas sin censura lógica.</li><li><strong>Resolución de Problemas:</strong> Acceso a memorias profundas.</li><li><strong>Aprendizaje Profundo:</strong> Alta sugestibilidad (idiomas).</li></ul>` },
+            'D': { beat: 10, min: 8, max: 14, name: 'ALPHA', img: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&w=1920&q=80', explanation: `<strong>ESTADO DEL SISTEMA: IDLE / READY MODE</strong><br><br>Alpha es el estado "por defecto" de un cerebro sano y relajado. Marcha en vacío.<br><br><strong>Aplicaciones Prácticas:</strong><ul><li><strong>Estudio y Lectura:</strong> Absorber información sin fatiga.</li><li><strong>Reducción de Estrés:</strong> Reset de cortisol.</li><li><strong>"Flow":</strong> Frecuencia de deportistas.</li></ul>` },
+            'A': { beat: 20, min: 14, max: 30, name: 'BETA', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80', explanation: `<strong>ESTADO DEL SISTEMA: PROCESAMIENTO ACTIVO</strong><br><br>Beta es la frecuencia de la vigilia normal y lógica.<br><br><strong>Aplicaciones Prácticas:</strong><ul><li><strong>Trabajo Focalizado:</strong> Informes, programación.</li><li><strong>Debate y Oratoria:</strong> Procesamiento rápido.</li><li><strong>Café Digital:</strong> Energía mental.</li></ul>` },
+            'C': { beat: 40, min: 30, max: 100, name: 'GAMMA', img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1920&q=80', explanation: `<strong>ESTADO DEL SISTEMA: OVERCLOCKING / TURBO</strong><br><br>Gamma son ráfagas de alta energía para procesamiento masivo.<br><br><strong>Aplicaciones Prácticas:</strong><ul><li><strong>Momentos "Eureka":</strong> Soluciones geniales.</li><li><strong>Memoria Fotográfica:</strong> Retención de datos complejos.</li><li><strong>Meditación Avanzada:</strong> Picos de lucidez.</li></ul>` }
         };
 
         // --- AUDIO ENGINE ---
@@ -396,6 +403,68 @@
         let currentBeat = 10; 
         let currentPreset = 'D';
 
+        // --- TIMER LOGIC ---
+        let timerValue = 'infinity'; // '5', '10', 'infinity'
+        let timerInterval = null;
+        let countdownEndTime = 0;
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            document.getElementById('countdownDisplayWrapper').classList.add('hidden');
+
+            if(timerValue === 'infinity') return;
+
+            const minutes = parseInt(timerValue);
+            countdownEndTime = Date.now() + (minutes * 60 * 1000);
+            
+            // Show wrapper
+            document.getElementById('countdownDisplayWrapper').classList.remove('hidden');
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                const now = Date.now();
+                const remaining = countdownEndTime - now;
+
+                if (remaining <= 0) {
+                    stopOscillators();
+                    // Optional: Play a soft chime? For now just stop.
+                } else {
+                    updateTimerDisplay(remaining);
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay(remainingMs) {
+            if (remainingMs === undefined) remainingMs = parseInt(timerValue) * 60 * 1000;
+            
+            const totalSeconds = Math.floor(remainingMs / 1000);
+            const m = Math.floor(totalSeconds / 60);
+            const s = totalSeconds % 60;
+            const text = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            
+            document.getElementById('countdownDisplay').innerText = text;
+            
+            // Sync mobile select text if possible? No, standard select can't show realtime easily,
+            // but we could change the label. Keeping it simple as requested.
+        }
+
+        function syncTimerSelects(sourceId) {
+            const val = document.getElementById(sourceId).value;
+            timerValue = val;
+            
+            // Sync the other select
+            const targetId = sourceId === 'mobileTimerSelect' ? 'desktopTimerSelect' : 'mobileTimerSelect';
+            document.getElementById(targetId).value = val;
+
+            // Restart timer if playing? 
+            // Engineering decision: If user changes time while playing, should it restart or just change duration?
+            // "Restart" is clearer.
+            if(isPlaying) {
+                startTimer();
+            }
+        }
+
+        // --- AUDIO FUNCTIONS ---
         async function initAudio() {
             if (audioCtx) return;
             const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -428,15 +497,20 @@
 
             oscillatorL.start(); oscillatorR.start();
             isPlaying = true;
-            updatePlayButton(true);
+            
+            updatePlayButtons(true);
             updateDisplayInfo(presets[currentPreset]);
+            startTimer();
         }
 
         function stopOscillators() {
             if (oscillatorL) { oscillatorL.stop(); oscillatorL.disconnect(); }
             if (oscillatorR) { oscillatorR.stop(); oscillatorR.disconnect(); }
             isPlaying = false;
-            updatePlayButton(false);
+            clearInterval(timerInterval);
+            document.getElementById('countdownDisplayWrapper').classList.add('hidden');
+            
+            updatePlayButtons(false);
             updateDisplayInfo(presets[currentPreset]);
         }
 
@@ -444,35 +518,29 @@
             isPlaying ? stopOscillators() : initAudio().then(startOscillators);
         }
 
-        // --- UI LOGIC ---
+        // --- UI UPDATES ---
         function setFrequency(presetKey) {
-            // Update Active State
             document.querySelectorAll('.glass-card').forEach(b => b.classList.remove('active-card'));
             document.getElementById(`btn-${presetKey}`).classList.add('active-card');
             
             const preset = presets[presetKey];
             currentPreset = presetKey;
-            
-            // Set Default Beat for Preset & Update Limits
             currentBeat = preset.beat;
+            
             const slider = document.getElementById('beatSlider');
             slider.min = preset.min; slider.max = preset.max; slider.value = currentBeat;
-            
             document.getElementById('minBeatDisplay').innerText = preset.min + " Hz";
             document.getElementById('maxBeatDisplay').innerText = preset.max + " Hz";
             document.getElementById('beatValueDisplay').innerHTML = `${currentBeat.toFixed(1)} <span class="text-xs text-slate-500">Hz</span>`;
 
-            // Background Loading Logic
             const imgLoader = new Image();
             imgLoader.src = preset.img;
             imgLoader.onload = () => {
-                // Only update if the user hasn't switched away
                 if(currentPreset === presetKey) {
                     document.getElementById('bg-layer').style.backgroundImage = `url('${preset.img}')`;
                 }
             };
 
-            // Audio Update
             if (isPlaying && audioCtx) {
                 const now = audioCtx.currentTime;
                 oscillatorL.frequency.setTargetAtTime(BASE_FREQ, now, 0.1);
@@ -483,25 +551,49 @@
             updateExplanation(preset);
         }
 
-        function updatePlayButton(playing) {
-            const btnText = document.getElementById('btnText');
-            const btnIcon = document.getElementById('btnIcon');
-            const bg = document.querySelector('#playBtn > div'); 
+        function updatePlayButtons(playing) {
+            // Desktop
+            const dtBtnText = document.getElementById('btnText');
+            const dtBtnIcon = document.getElementById('btnIcon');
+            const dtBg = document.querySelector('#desktopPlayBtn > div');
             
+            // Mobile
+            const mbBtn = document.getElementById('mobilePlayBtn');
+            const mbIcon = document.getElementById('mobilePlayIcon');
+            const mbText = document.getElementById('mobilePlayText');
+
             if (playing) {
-                btnText.innerText = "DETENER";
-                btnIcon.innerHTML = '<svg class="w-3 h-3 text-rose-400" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
-                btnIcon.classList.remove('group-hover:border-emerald-400/80');
-                btnIcon.classList.add('border-rose-400/80');
-                bg.classList.remove('bg-emerald-500/20');
-                bg.classList.add('bg-rose-500/20', 'scale-x-100'); 
+                // Desktop
+                dtBtnText.innerText = "DETENER";
+                dtBtnIcon.innerHTML = '<svg class="w-3 h-3 text-rose-400" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+                dtBtnIcon.classList.remove('group-hover:border-emerald-400/80');
+                dtBtnIcon.classList.add('border-rose-400/80');
+                dtBg.classList.remove('bg-emerald-500/20');
+                dtBg.classList.add('bg-rose-500/20', 'scale-x-100'); 
+                
+                // Mobile
+                mbBtn.classList.replace('bg-emerald-500/20', 'bg-rose-500/20');
+                mbBtn.classList.replace('border-emerald-500/50', 'border-rose-500/50');
+                mbIcon.classList.replace('text-emerald-400', 'text-rose-400');
+                mbIcon.innerHTML = '<path d="M6 4h4v16H6zm8 0h4v16h-4z"/>';
+                mbText.innerText = "Stop";
+                mbText.classList.replace('text-emerald-100', 'text-rose-100');
             } else {
-                btnText.innerText = "INICIAR SESIÓN";
-                btnIcon.innerHTML = '<svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
-                btnIcon.classList.remove('border-rose-400/80');
-                btnIcon.classList.add('group-hover:border-emerald-400/80');
-                bg.classList.remove('bg-rose-500/20', 'scale-x-100');
-                bg.classList.add('bg-emerald-500/20');
+                // Desktop
+                dtBtnText.innerText = "INICIAR SESIÓN";
+                dtBtnIcon.innerHTML = '<svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                dtBtnIcon.classList.remove('border-rose-400/80');
+                dtBtnIcon.classList.add('group-hover:border-emerald-400/80');
+                dtBg.classList.remove('bg-rose-500/20', 'scale-x-100');
+                dtBg.classList.add('bg-emerald-500/20');
+
+                // Mobile
+                mbBtn.classList.replace('bg-rose-500/20', 'bg-emerald-500/20');
+                mbBtn.classList.replace('border-rose-500/50', 'border-emerald-500/50');
+                mbIcon.classList.replace('text-rose-400', 'text-emerald-400');
+                mbIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                mbText.innerText = "Play";
+                mbText.classList.replace('text-rose-100', 'text-emerald-100');
             }
         }
 
@@ -520,6 +612,15 @@
         function updateExplanation(preset) {
             document.getElementById('explainTitle').innerText = `${preset.name} (${preset.min}-${preset.max} Hz)`;
             document.getElementById('explainText').innerHTML = preset.explanation;
+        }
+
+        function toggleExplanation(show) {
+            const panel = document.getElementById('explanationPanel');
+            // Sync checks
+            document.getElementById('mobileInfoToggle').checked = show;
+            document.getElementById('desktopInfoToggle').checked = show;
+            
+            show ? panel.classList.add('visible') : panel.classList.remove('visible');
         }
 
         // --- VISUALIZER ---
@@ -547,7 +648,6 @@
                 
                 ctx.lineWidth = 2;
                 
-                // Draw L (Cyan)
                 ctx.beginPath();
                 ctx.strokeStyle = "rgba(56, 189, 248, 0.8)"; 
                 for(let i=0; i<bufferLength; i+=8) {
@@ -557,7 +657,6 @@
                 }
                 ctx.stroke();
 
-                // Draw R (Purple)
                 ctx.beginPath();
                 ctx.strokeStyle = "rgba(192, 132, 252, 0.8)";
                 for(let i=0; i<bufferLength; i+=8) {
@@ -571,7 +670,8 @@
         }
 
         // --- LISTENERS ---
-        document.getElementById('playBtn').addEventListener('click', togglePlay);
+        document.getElementById('desktopPlayBtn').addEventListener('click', togglePlay);
+        document.getElementById('mobilePlayBtn').addEventListener('click', togglePlay);
         
         const volSlider = document.getElementById('volumeSlider');
         volSlider.addEventListener('input', (e) => {
@@ -591,10 +691,13 @@
             }
         });
 
-        document.getElementById('infoToggle').addEventListener('change', (e) => {
-            const panel = document.getElementById('explanationPanel');
-            e.target.checked ? panel.classList.add('visible') : panel.classList.remove('visible');
-        });
+        // Toggle Sync
+        document.getElementById('mobileInfoToggle').addEventListener('change', (e) => toggleExplanation(e.target.checked));
+        document.getElementById('desktopInfoToggle').addEventListener('change', (e) => toggleExplanation(e.target.checked));
+
+        // Timer Sync
+        document.getElementById('mobileTimerSelect').addEventListener('change', (e) => syncTimerSelects('mobileTimerSelect'));
+        document.getElementById('desktopTimerSelect').addEventListener('change', (e) => syncTimerSelects('desktopTimerSelect'));
 
         // INIT
         setFrequency('D');
