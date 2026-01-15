@@ -128,7 +128,9 @@
     <main class="relative z-10 max-w-7xl mx-auto p-4 lg:p-8 min-h-screen flex flex-col lg:flex-row gap-6 lg:gap-12 items-start justify-center pt-8 lg:pt-12">
         
         <!-- LEFT: Controls & Visualizer -->
-        <section class="w-full lg:w-1/3 flex flex-col gap-6 fade-in sticky top-8" style="animation-delay: 0.1s;">
+        <!-- CAMBIO: 'sticky top-8' cambiado a 'lg:sticky lg:top-8'. 
+             Así en móvil es estático (hace scroll normal) y no se monta encima de nada. -->
+        <section class="w-full lg:w-1/3 flex flex-col gap-6 fade-in lg:sticky lg:top-8" style="animation-delay: 0.1s;">
             
             <!-- Header (MODIFICADO: Logo + Texto Integrados) -->
             <div class="mb-4 flex items-center gap-4 w-full border-b border-white/5 pb-6">
